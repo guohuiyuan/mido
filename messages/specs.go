@@ -24,15 +24,6 @@ var (
 	MAX_SONGPOS = 16383
 )
 
-// type Message struct {
-// 	StatusByte     byte     `json:"status_byte"`
-// 	Type           string   `json:"type"`
-// 	ValueNames     []string `json:"value_names"`
-// 	AttributeNames []string `json:"attribute_names"`
-// 	Length         int      `json:"length"`
-// 	Time           int      `json:"time"`
-// }
-
 func DefMsg(statusByte byte, msgType string, valueNames []string, length int) (m map[string]interface{}) {
 	m = make(map[string]interface{})
 	m["status_byte"] = statusByte
@@ -103,7 +94,7 @@ var (
 	DEFAULT_VALUES                            = map[string]interface{}{
 		"channel":     0,
 		"control":     0,
-		"data":        []interface{}{},
+		"data":        make(map[string]interface{}),
 		"frame_type":  0,
 		"frame_value": 0,
 		"note":        0,
@@ -119,9 +110,8 @@ var (
 
 func MakeMsg(msgType string, overrides map[string]interface{}) (m map[string]interface{}, err error) {
 	m = make(map[string]interface{})
-	var spec map[string]interface{}
-	var ok bool
-	if spec, ok = SPEC_BY_TYPE[msgType]; !ok {
+	spec, ok := SPEC_BY_TYPE[msgType]
+	if !ok {
 		err = errors.New("Unknown message type " + msgType)
 		return
 	}
