@@ -6,13 +6,13 @@ import (
 	"mido/utils"
 )
 
-// func Sysex(data []byte) (b []byte) {
-// 	b = make([]byte, len(data)+2)
-// 	b[0] = 0xf0
-// 	copy(b[1:len(b)-1], data)
-// 	b[len(b)-1] = 0xf7
-// 	return
-// }
+func Sysex(data []byte) (b []byte) {
+	b = make([]byte, len(data)+2)
+	b[0] = 0xf0
+	copy(b[1:len(b)-1], data)
+	b[len(b)-1] = 0xf7
+	return
+}
 
 func DecodeSysexData(data []byte) (m map[string]interface{}) {
 	m = make(map[string]interface{})
