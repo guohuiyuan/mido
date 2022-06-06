@@ -1,7 +1,7 @@
 package messages
 
 import (
-	"errors"
+	"fmt"
 	"math"
 	"mido/utils"
 	"sort"
@@ -94,7 +94,7 @@ var (
 	DEFAULT_VALUES                            = map[string]interface{}{
 		"channel":     0,
 		"control":     0,
-		"data":        make(map[string]interface{}),
+		"data":        make([]byte, 0),
 		"frame_type":  0,
 		"frame_value": 0,
 		"note":        0,
@@ -108,11 +108,11 @@ var (
 	}
 )
 
-func MakeMsg(msgType string, overrides map[string]interface{}) (m map[string]interface{}, err error) {
+func MakeMsgMap(msgType string, overrides map[string]interface{}) (m map[string]interface{}, err error) {
 	m = make(map[string]interface{})
 	spec, ok := SPEC_BY_TYPE[msgType]
 	if !ok {
-		err = errors.New("Unknown message type " + msgType)
+		err = fmt.Errorf("Unknown message type %v", msgType)
 		return
 	}
 	m["type"] = msgType
@@ -120,8 +120,10 @@ func MakeMsg(msgType string, overrides map[string]interface{}) (m map[string]int
 	for _, v := range spec["value_names"].([]string) {
 		m[v] = DEFAULT_VALUES[v]
 	}
-	for k, v := range overrides {
-		m[k] = v
+	if overrides != nil {
+		for k, v := range overrides {
+			m[k] = v
+		}
 	}
 	return
 }

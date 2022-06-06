@@ -80,9 +80,9 @@ func CheckFrameValue(value interface{}) (err error) {
 }
 
 func CheckDataByte(value interface{}) (err error) {
-	v, ok := value.(int)
+	v, ok := value.(byte)
 	if !ok {
-		err = errors.New("data byte must be int")
+		err = errors.New("data byte must be byte")
 	} else if v < 0 || v > 127 {
 		err = errors.New("data byte must be in range 0..127")
 	}

@@ -1,7 +1,6 @@
 package messages
 
 import (
-	"errors"
 	"fmt"
 	"mido/utils"
 )
@@ -58,7 +57,7 @@ var (
 
 func DecodeDataBytes(statusByte byte, data []byte, spec map[string]interface{}) (args map[string]interface{}, err error) {
 	if len(data) != spec["length"].(int)-1 {
-		err = errors.New(fmt.Sprintf("wrong number of bytes for %s message", spec["type"]))
+		err = fmt.Errorf("wrong number of bytes for %s message", spec["type"])
 		return
 	}
 	names := utils.RemoveOne(spec["value_names"].([]string), "channel")
@@ -74,14 +73,14 @@ func DecodeDataBytes(statusByte byte, data []byte, spec map[string]interface{}) 
 
 func DecodeMessage(msgBytes []byte, time int, check bool) (msg map[string]interface{}, err error) {
 	if len(msgBytes) == 0 {
-		err = errors.New("message is 0 bytes long")
+		err = fmt.Errorf("message is 0 bytes long")
 		return
 	}
 	statusByte := msgBytes[0]
 	data := msgBytes[1:]
 	spec, ok := SPEC_BY_STATUS[statusByte]
 	if !ok {
-		err = errors.New(fmt.Sprintf("invalid status byte %x", statusByte))
+		err = fmt.Errorf("invalid status byte %x", statusByte)
 		return
 	}
 	msg = map[string]interface{}{
@@ -90,16 +89,19 @@ func DecodeMessage(msgBytes []byte, time int, check bool) (msg map[string]interf
 	}
 	if statusByte == byte(SYSEX_START) {
 		if len(data) < 1 {
-			err = errors.New("sysex without end byte")
+			err = fmt.Errorf("sysex without end byte")
 		}
 		end := data[len(data)-1]
 		data = data[:len(data)-1]
 		if end != byte(SYSEX_END) {
-			err = errors.New(fmt.Sprintf("invalid sysex end byte %x", end))
+			err = fmt.Errorf("invalid sysex end byte %x", end)
 		}
 	}
 	if check {
-
+		err = CheckData(data)
+		if err != nil {
+			return
+		}
 	}
 	var m map[string]interface{}
 	if _, ok := DECODE_SPECIAL_CASES[statusByte]; ok {
