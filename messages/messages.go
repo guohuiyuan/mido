@@ -34,9 +34,9 @@ func (m *Message) Hex() (res string) {
 	b := m.Bytes()
 	for i := 0; i < len(b); i++ {
 		if i == 0 {
-			res += fmt.Sprintf("%X", b[i])
+			res += fmt.Sprintf("%02X", b[i])
 		} else {
-			res += fmt.Sprintf(" %X", b[i])
+			res += fmt.Sprintf(" %02X", b[i])
 		}
 	}
 	return

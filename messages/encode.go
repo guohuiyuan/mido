@@ -4,8 +4,8 @@ func EncodePitchwheel(msg map[string]interface{}) (b []byte) {
 	b = make([]byte, 3)
 	pitch := msg["pitch"].(int) - MIN_PITCHWHEEL
 	b[0] = 0xe0 | msg["channel"].(byte)
-	b[1] = byte(pitch) & 0x7f
-	b[2] = byte(pitch) >> 7
+	b[1] = byte(pitch & 0x7f)
+	b[2] = byte(pitch >> 7)
 	return
 }
 

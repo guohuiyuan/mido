@@ -28,13 +28,13 @@ func DecodeQuarterFrameData(data []byte) (m map[string]interface{}) {
 
 func DecodeSongposData(data []byte) (m map[string]interface{}) {
 	m = make(map[string]interface{})
-	m["pos"] = data[0] | (data[1] << 7)
+	m["pos"] = int(data[0]) | int(data[1])<<7
 	return
 }
 
 func DecodePitchwheelData(data []byte) (m map[string]interface{}) {
 	m = make(map[string]interface{})
-	m["pitch"] = data[0] | ((data[1] << 7) + byte(MIN_PITCHWHEEL))
+	m["pitch"] = int(data[0]) | int(data[1])<<7 + MIN_PITCHWHEEL
 	return
 }
 
