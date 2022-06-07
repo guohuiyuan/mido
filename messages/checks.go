@@ -15,9 +15,9 @@ func CheckType(msgType interface{}) (err error) {
 }
 
 func CheckChannel(channel interface{}) (err error) {
-	c, ok := channel.(int)
+	c, ok := channel.(byte)
 	if !ok {
-		err = errors.New("channel must be int")
+		err = errors.New("channel must be byte")
 	} else if c < 0 || c > 15 {
 		err = errors.New("channel must be in range 0..15")
 	}

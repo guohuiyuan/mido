@@ -88,7 +88,6 @@ func TestFromBytes(t *testing.T) {
 	var b []byte
 	var m Message
 	var err error
-	// pitchwheel
 	b = []byte{0xE0, 00, 00}
 	m, err = FromBytes(b)
 	t.Logf("m1:%+v,err:%v", m, err)
@@ -97,7 +96,6 @@ func TestFromBytes(t *testing.T) {
 func TestFromHex(t *testing.T) {
 	var m Message
 	var err error
-	// pitchwheel 1
 	m, err = FromHex("E0 7F 7F")
 	t.Logf("m:%+v,err:%v", m, err)
 }
@@ -128,4 +126,19 @@ func TestDecodePitchwheel(t *testing.T) {
 	assert.Equal(t, 0, m.Pitch, "pitchwheel decode error")
 	m, _ = FromHex("E0 7F 7F")
 	assert.Equal(t, MAX_PITCHWHEEL, m.Pitch, "pitchwheel decode error")
+}
+
+func TestEncodeSongpos(t *testing.T) {
+	m := Message{Type: "songpos", Pos: MIN_SONGPOS}
+	assert.Equal(t, "F2 00 00", m.Hex(), "songpos encode error")
+	m.Pos = MAX_SONGPOS
+	assert.Equal(t, "F2 7F 7F", m.Hex(), "songpos encode error")
+}
+
+func TestDecodeSongpos(t *testing.T) {
+	var m Message
+	m, _ = FromHex("F2 00 00")
+	assert.Equal(t, MIN_SONGPOS, m.Pos, "songpos decode error")
+	m, _ = FromHex("F2 7F 7F")
+	assert.Equal(t, MAX_SONGPOS, m.Pos, "songpos decode error")
 }

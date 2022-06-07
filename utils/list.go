@@ -18,8 +18,10 @@ func RemoveDuplicate(list ...string) []string {
 	return list[:i+1]
 }
 
-// RemoveOne 去除string数组的目标字符串,没有则返回原数组
-func RemoveOne(list []string, target string) []string {
+// RemoveOne 去除string数组的目标字符串,没有则返回原数组的深拷贝
+func RemoveOne(src []string, target string) []string {
+	list := make([]string, len(src))
+	copy(list, src)
 	sort.Strings(list)
 	i := sort.SearchStrings(list, target)
 	if i >= len(list) || list[i] != target {

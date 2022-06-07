@@ -80,7 +80,7 @@ func DecodeMessage(msgBytes []byte, time int, check bool) (msg map[string]interf
 	data := msgBytes[1:]
 	spec, ok := SPEC_BY_STATUS[statusByte]
 	if !ok {
-		err = fmt.Errorf("invalid status byte %x", statusByte)
+		err = fmt.Errorf("invalid status byte 0x%02X", statusByte)
 		return
 	}
 	msg = map[string]interface{}{
@@ -90,11 +90,13 @@ func DecodeMessage(msgBytes []byte, time int, check bool) (msg map[string]interf
 	if statusByte == byte(SYSEX_START) {
 		if len(data) < 1 {
 			err = fmt.Errorf("sysex without end byte")
+			return
 		}
 		end := data[len(data)-1]
 		data = data[:len(data)-1]
 		if end != byte(SYSEX_END) {
-			err = fmt.Errorf("invalid sysex end byte %x", end)
+			err = fmt.Errorf("invalid sysex end byte 0x%02X", end)
+			return
 		}
 	}
 	if check {

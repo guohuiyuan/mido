@@ -27,10 +27,10 @@ func EncodeQuarterFrame(msg map[string]interface{}) (b []byte) {
 
 func EncodeSongpos(data map[string]interface{}) (b []byte) {
 	b = make([]byte, 3)
-	pos := data["pos"].(byte)
+	pos := data["pos"].(int)
 	b[0] = 0xf2
-	b[1] = pos & 0x7f
-	b[2] = pos >> 7
+	b[1] = byte(pos & 0x7f)
+	b[2] = byte(pos >> 7)
 	return
 }
 
